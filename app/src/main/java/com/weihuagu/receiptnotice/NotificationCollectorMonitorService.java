@@ -110,9 +110,10 @@ public class NotificationCollectorMonitorService extends Service {
                         @Override
                         public void call(Object... args) {
                                 LogUtil.infoLog("socket disconnected,try start echo in 5 secend");
+                                mSocket.close();
                                 if (retryTimes > 3) {
                                         retryTimes = 0;
-                                        EchoSocket.clearInstance(0);
+                                        EchoSocket.clearInstance();
                                 }
                                 try{
                                         Thread.sleep(5000);
@@ -302,39 +303,10 @@ public class NotificationCollectorMonitorService extends Service {
                         if(i==3) return EchoSocket.instance3;
                         else return null;
                 }
-                public static void clearInstance(int i){
-                        if(i==1) {
-                                if(EchoSocket.instance1!=null){
-                                        EchoSocket.instance1.close();
-                                        EchoSocket.instance1=null;
-                                }
-                        }
-                        if(i==2) {
-                                if(EchoSocket.instance2!=null){
-                                        EchoSocket.instance1.close();
-                                        EchoSocket.instance2=null;
-                                }
-                        }
-                        if(i==3) {
-                                if(EchoSocket.instance3!=null){
-                                        EchoSocket.instance1.close();
-                                        EchoSocket.instance3=null;
-                                }
-                        }
-                        if(i==0){
-                                if(EchoSocket.instance1!=null){
-                                        EchoSocket.instance1.close();
-                                        EchoSocket.instance1=null;
-                                }
-                                if(EchoSocket.instance2!=null){
-                                        EchoSocket.instance2.close();
-                                        EchoSocket.instance2=null;
-                                }
-                                if(EchoSocket.instance3!=null){
-                                        EchoSocket.instance3.close();
-                                        EchoSocket.instance3=null;
-                                }
-                        }
+                public static void clearInstance(){
+                        EchoSocket.instance1=null;
+                        EchoSocket.instance2=null;
+                        EchoSocket.instance3=null;
                 }
 
                 public static Socket getInstance(String socketserverurl){
