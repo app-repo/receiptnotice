@@ -67,8 +67,9 @@ public class NotificationCollectorMonitorService extends Service {
         private static final String TAG = "NotifiCollectorMonitor";
         private Timer timer=null;
         private String echointerval=null;
-        private TimerTask echotimertask =null;
+        private TimerTask echotimertask=null;
         private WakeLock wl=null;
+        private static int retryTimes=0;
         private void setWakelock() {
                 PreferenceUtil preference=new PreferenceUtil(getBaseContext());
                 if(preference.isWakelock())
@@ -102,19 +103,33 @@ public class NotificationCollectorMonitorService extends Service {
                 return START_STICKY;
         }
         private boolean echoServerBySocketio(String echourl,String echojson){
-                Socket mSocket= EchoSocket.getInstance(echourl);
+                final Socket mSocket= EchoSocket.getInstance(echourl);
                 mSocket.connect();
                 mSocket.emit("echo",echojson);
                 mSocket.on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
                         @Override
                         public void call(Object... args) {
                                 LogUtil.infoLog("socket disconnected,try start echo in 5 secend");
+                                mSocket.close();
+                                if (retryTimes > 3) {
+                                        retryTimes = 0;
+                                        EchoSocket.clearInstance(0);
+                                }
                                 try{
                                         Thread.sleep(5000);
                                 }catch(InterruptedException e){
                                         e.printStackTrace();
                                 }
+                                retryTimes++;
                                 echoServer();
+                        }
+                });
+                mSocket.on("echo", new Emitter.Listener() {
+                        @Override
+                        public void call(Object... args) {
+                            String result = args[0].toString();
+                            if (result.equals("success")) retryTimes = 0;
+                            LogUtil.debugLog("socket response message: "+result);
                         }
                 });
                 return true;
@@ -283,14 +298,20 @@ public class NotificationCollectorMonitorService extends Service {
                 private EchoSocket(){
                 }
                 public static Socket getThisInstance(int i){
-                        if(i==1)
-                                return EchoSocket.instance1;
-                        if(i==2)
-                                return EchoSocket.instance2;
-                        if(i==3)
-                                return EchoSocket.instance3;
-                        else
-                                return null;
+                        if(i==1) return EchoSocket.instance1;
+                        if(i==2) return EchoSocket.instance2;
+                        if(i==3) return EchoSocket.instance3;
+                        else return null;
+                }
+                public static void clearInstance(int i){
+                        if(i==1) EchoSocket.instance1=null;
+                        if(i==2) EchoSocket.instance2=null;
+                        if(i==3) EchoSocket.instance3=null;
+                        if(i==0){
+                           EchoSocket.instance1=null;
+                           EchoSocket.instance2=null;
+                           EchoSocket.instance3=null;
+                        }
                 }
 
                 public static Socket getInstance(String socketserverurl){
