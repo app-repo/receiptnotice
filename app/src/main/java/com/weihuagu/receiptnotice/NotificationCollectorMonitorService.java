@@ -1,4 +1,4 @@
-package com.weihuagu.receiptnotice;;
+package com.weihuagu.receiptnotice;
 
 import android.app.ActivityManager;
 import android.app.Service;
@@ -84,10 +84,7 @@ public class NotificationCollectorMonitorService extends Service {
 
         }
         private void releaseWakelock() {
-                if(wl!=null)
-                        wl.release();
-                else
-                        return;
+                if(wl!=null) wl.release();
         }
 
 
@@ -168,16 +165,13 @@ public class NotificationCollectorMonitorService extends Service {
         private boolean isIntervalMatchPreference(){
                 PreferenceUtil preference=new PreferenceUtil(getBaseContext());
                 String interval=preference.getEchoInterval();
-                if(interval.equals(""))
-                        return true;
-                if(interval.equals(this.echointerval))
-                        return true;
-                return false;
+                if(interval.equals("")) return true;
+                return interval.equals(this.echointerval);
         }
         private boolean echoServer(){
                 PreferenceUtil preference=new PreferenceUtil(getBaseContext());
                 Gson gson = new Gson();
-                if(preference. isEcho()&&(preference.getEchoServer()!=null)){
+                if(preference.isEcho()&&(preference.getEchoServer()!=null)){
 
                                 Date date = new Date(System.currentTimeMillis());
                                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
