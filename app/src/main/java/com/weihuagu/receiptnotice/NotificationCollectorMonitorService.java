@@ -109,6 +109,7 @@ public class NotificationCollectorMonitorService extends Service {
                 mSocket.on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
                         @Override
                         public void call(Object... args) {
+                                LogUtil.infoLog(args[0].toString());
                                 LogUtil.infoLog("socket disconnected,try start echo in 5 secend");
                                 mSocket.close();
                                 if (retryTimes > 3) {
