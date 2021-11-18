@@ -43,6 +43,8 @@ import io.socket.emitter.Emitter;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import io.socket.engineio.client.transports.Polling;
+import io.socket.engineio.client.transports.WebSocket;
 import okhttp3.OkHttpClient;
 import okhttp3.TlsVersion;
 import okhttp3.ConnectionSpec;
@@ -69,7 +71,6 @@ public class NotificationCollectorMonitorService extends Service {
         private String echointerval=null;
         private TimerTask echotimertask=null;
         private WakeLock wl=null;
-        private static int retryTimes=0;
         private void setWakelock() {
                 PreferenceUtil preference=new PreferenceUtil(getBaseContext());
                 if(preference.isWakelock())
@@ -109,28 +110,41 @@ public class NotificationCollectorMonitorService extends Service {
                 mSocket.on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
                         @Override
                         public void call(Object... args) {
-                                LogUtil.infoLog(args[0].toString());
-                                LogUtil.infoLog("socket disconnected,try start echo in 5 secend");
-                                mSocket.close();
-                                if (retryTimes > 3) {
-                                        retryTimes = 0;
-                                        EchoSocket.clearInstance();
-                                }
+                                if(args.length>0) LogUtil.infoLog(args[0].toString());
+                                /*
+                                LogUtil.infoLog("socket disconnected,try start echo in 5 seconds");
                                 try{
                                         Thread.sleep(5000);
                                 }catch(InterruptedException e){
                                         e.printStackTrace();
                                 }
-                                retryTimes++;
                                 echoServer();
+                                // */
+                        }
+                });
+                mSocket.on(Socket.EVENT_ERROR, new Emitter.Listener() {
+                        @Override
+                        public void call(Object... args) {
+                                if(args.length>0) LogUtil.infoLog(args[0].toString());
+                        }
+                });
+                mSocket.on(Socket.EVENT_CONNECT_ERROR, new Emitter.Listener() {
+                        @Override
+                        public void call(Object... args) {
+                                if(args.length>0) LogUtil.infoLog(args[0].toString());
+                        }
+                });
+                mSocket.on(Socket.EVENT_CONNECT_TIMEOUT, new Emitter.Listener() {
+                        @Override
+                        public void call(Object... args) {
+                                if(args.length>0) LogUtil.infoLog(args[0].toString());
                         }
                 });
                 mSocket.on("echo", new Emitter.Listener() {
                         @Override
                         public void call(Object... args) {
-                            String result = args[0].toString();
-                            if (result.equals("success")) retryTimes = 0;
-                            LogUtil.debugLog("socket response message: "+result);
+                            String result = args.length>0 ? args[0].toString() : "";
+                            if (!result.equals("success")) LogUtil.debugLog("socket response message: "+result);
                         }
                 });
                 return true;
@@ -188,7 +202,6 @@ public class NotificationCollectorMonitorService extends Service {
                 PreferenceUtil preference=new PreferenceUtil(getBaseContext());
                 Gson gson = new Gson();
                 if(preference.isEcho()&&(preference.getEchoServer()!=null)){
-
                                 Date date = new Date(System.currentTimeMillis());
                                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                                 String time = format.format(date);
@@ -208,8 +221,7 @@ public class NotificationCollectorMonitorService extends Service {
                                         if (custompostoption != null) {
 
                                             LogUtil.debugLogWithJava("echo custom option map"+custompostoption.toString());
-                                            if(custompostoption.size()>0)
-                                                devicemap.putAll(custompostoption);
+                                            if(custompostoption.size()>0) devicemap.putAll(custompostoption);
                                         }
                                 }
                                 echoServerBySocketio(preference.getEchoServer(), gson.toJson(devicemap));
@@ -217,8 +229,7 @@ public class NotificationCollectorMonitorService extends Service {
                                 return true;
 
                 }
-                else
-                        return false;
+                else return false;
 
         }
         private void ensureCollectorRunning() {
@@ -305,6 +316,9 @@ public class NotificationCollectorMonitorService extends Service {
                         else return null;
                 }
                 public static void clearInstance(){
+                        if (EchoSocket.instance1!=null) EchoSocket.instance1.close();
+                        if (EchoSocket.instance2!=null) EchoSocket.instance2.close();
+                        if (EchoSocket.instance3!=null) EchoSocket.instance3.close();
                         EchoSocket.instance1=null;
                         EchoSocket.instance2=null;
                         EchoSocket.instance3=null;
@@ -315,14 +329,9 @@ public class NotificationCollectorMonitorService extends Service {
                         int current = random.nextInt(maxCount)+1;
                         if(getThisInstance(current)==null){
                                 synchronized(EchoSocket.class){
-                                        if(current==1)
-                                                instance1=getIOSocket(socketserverurl);
-                                        if(current==2)
-                                                instance2=getIOSocket(socketserverurl);
-
-                                        if(current==3)
-                                                instance3=getIOSocket(socketserverurl);
-
+                                        if(current==1) instance1=getIOSocket(socketserverurl);
+                                        if(current==2) instance2=getIOSocket(socketserverurl);
+                                        if(current==3) instance3=getIOSocket(socketserverurl);
                                 }
                         }
                         return getThisInstance(current);
@@ -331,7 +340,10 @@ public class NotificationCollectorMonitorService extends Service {
                 public static Socket getIOSocket(String socketserverurl){
                         try{
                                 if (Build.VERSION.SDK_INT >= 22 ){
-                                        return IO.socket(socketserverurl);
+                                        // set as an option
+                                        IO.Options opts = new IO.Options();
+                                        opts.transports=new String[]{WebSocket.NAME, Polling.NAME};
+                                        return IO.socket(socketserverurl, opts);
                                 }
                                 else{
                                         SSLSocketFactory factory = new SSLSocketFactoryCompat();
@@ -350,6 +362,7 @@ public class NotificationCollectorMonitorService extends Service {
                                         IO.setDefaultOkHttpCallFactory(client);
                                         // set as an option
                                         IO.Options opts = new IO.Options();
+                                        opts.transports=new String[]{WebSocket.NAME, Polling.NAME};
                                         opts.callFactory = client;
                                         opts.webSocketFactory = client;
                                         return IO.socket(socketserverurl, opts);
