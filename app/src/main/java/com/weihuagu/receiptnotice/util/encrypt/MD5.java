@@ -22,6 +22,8 @@ public class MD5 extends Encrypter {
             postmap.putAll(params);
             postmap.put("sign", getSignMd5WithSecretkey(params.get("type"), params.get("money"), key));
             LogUtil.debugLogWithJava("调试，sign md5");
+            LogUtil.debugLogWithJava("加密后的map");
+            LogUtil.debugLogWithJava(postmap.toString());
             return postmap;
         }else
         return params;
