@@ -29,7 +29,7 @@ public class MD5 extends Encrypter {
             String nonce = getMd5String(getTimestamp()+"|"+java.util.UUID.randomUUID().toString());
             postmap.put("nonce", nonce);
             postmap.put("sign", getSignMd5WithSecretkey(params.get("type"), params.get("money"), params.get("time"), nonce, key));
-            //*
+            /*
             LogUtil.debugLogWithJava("调试，sign md5");
             LogUtil.debugLogWithJava("加密后的map");
             LogUtil.debugLogWithJava(postmap.toString());
