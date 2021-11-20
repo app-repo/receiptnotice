@@ -24,12 +24,9 @@ public class PostMapFilter {
 
     public String getDeviceid() {
         String deviceid = preference.getDeviceid();
-        if (deviceid.equals(""))
-            deviceid = DeviceInfoUtil.getUniquePsuedoID();
-        else if (preference.isAppendDeviceiduuid())
-            deviceid = deviceid + '-' + DeviceInfoUtil.getUniquePsuedoID();
-        else
-            deviceid = deviceid;
+        if (deviceid.equals("")) deviceid = DeviceInfoUtil.getUniquePsuedoID();
+        else if (preference.isAppendDeviceiduuid()) deviceid = deviceid + '-' + DeviceInfoUtil.getUniquePsuedoID();
+
         return deviceid;
     }
 

@@ -48,7 +48,7 @@ public class IllustrateDecryptActivity extends AppCompatActivity {
                         text_method.setText("解密的方法为:"+"md5校验");
                         String key=preference.getPasswd();
                         if(key!=null){
-                                text_passwd.setText("md5加密方法为md5(md5(price + type) + secretkey)");
+                                text_passwd.setText("md5加密方法为md5(md5(price + type + time + nonce) + secretkey)");
 
                         }
                 }

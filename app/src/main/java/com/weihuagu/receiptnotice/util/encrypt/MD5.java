@@ -16,14 +16,24 @@ public class MD5 extends Encrypter {
 
     }
 
+    public String getTimestamp() { //生成时间戳
+        long timestampLong =System.currentTimeMillis();
+        String timestampStr = String.valueOf(timestampLong);
+        return timestampStr;
+    }
+
     public Map<String, String> transferMapValue(Map<String, String> params) {
         if(params.get("type")!=null&&params.get("money")!=null&&key!=null) {
             Map<String, String> postmap = new HashMap<String, String>();
             postmap.putAll(params);
-            postmap.put("sign", getSignMd5WithSecretkey(params.get("type"), params.get("money"), key));
-//            LogUtil.debugLogWithJava("调试，sign md5");
-//            LogUtil.debugLogWithJava("加密后的map");
-//            LogUtil.debugLogWithJava(postmap.toString());
+            String nonce = getMd5String(getTimestamp()+"|"+java.util.UUID.randomUUID().toString());
+            postmap.put("nonce", nonce);
+            postmap.put("sign", getSignMd5WithSecretkey(params.get("type"), params.get("money"), params.get("time"), nonce, key));
+            //*
+            LogUtil.debugLogWithJava("调试，sign md5");
+            LogUtil.debugLogWithJava("加密后的map");
+            LogUtil.debugLogWithJava(postmap.toString());
+            // */
             return postmap;
         }else
         return params;
@@ -53,8 +63,8 @@ public class MD5 extends Encrypter {
         return md5str;
     }
 
-    public String getSignMd5WithSecretkey(String type, String price, String secretkey) {
-        String md5str=getMd5String(getMd5String(type+price)+secretkey);
+    public String getSignMd5WithSecretkey(String type, String price,String time, String nonce, String secretkey) {
+        String md5str=getMd5String(getMd5String(type+price+time+nonce)+secretkey);
         return md5str;
     }
 

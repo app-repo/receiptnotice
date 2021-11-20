@@ -23,10 +23,8 @@ public class TestDES extends TestCase{
                                 postmap.put("money","345.56");
                                 postmap.put("content","测试des伪造的");
     
-    des.transferMapValue(postmap);
-
-
-}
+        des.transferMapValue(postmap);
+    }
 
 
 
