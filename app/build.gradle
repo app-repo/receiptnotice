@@ -29,6 +29,7 @@ android {
         lintOptions {
                 abortOnError false
         }
+    namespace 'com.weihuagu.receiptnotice'
 }
 dependencies {
                 implementation fileTree(dir: 'libs', include: ['*.jar'])
