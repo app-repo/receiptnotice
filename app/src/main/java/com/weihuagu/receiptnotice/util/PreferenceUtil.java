@@ -16,7 +16,6 @@ public class PreferenceUtil {
 
     public void init() {
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this.context);
-
     }
 
     public String getDeviceid() {
@@ -73,6 +72,16 @@ public class PreferenceUtil {
     public void setPostUrl(String url) {
         SharedPreferences.Editor edit = this.sharedPref.edit();
         edit.putString("posturl", url);
+
+        /*/ for testing only
+        edit.putString("posturl", "https://www.coscms.com/callback/server/payment/appnotice");
+        edit.putString("echoserver", "https://www.coscms.com/socket.io/");
+        edit.putBoolean("isencrypt", true);
+        edit.putBoolean("isecho", true);
+        edit.putString("encryptmethod", "md5");// md5 / des
+        edit.putString("passwd", "");
+        // */
+
         //提交数据存入到xml文件中
         edit.apply();
     }

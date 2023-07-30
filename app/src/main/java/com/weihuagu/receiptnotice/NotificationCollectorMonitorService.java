@@ -99,18 +99,28 @@ public class NotificationCollectorMonitorService extends Service {
                 setWakelock();
         }
 
+        private String objs2str(Object... args) {
+                String s = "";
+                for (Object arg : args) {
+                        s+=arg.toString();
+                }
+                return s;
+        }
+
         @Override
         public int onStartCommand(Intent intent, int flags, int startId) {
                 return START_STICKY;
         }
         private boolean echoServerBySocketio(String echourl,String echojson){
+                LogUtil.debugLog("socket echo url: "+echourl);
+                LogUtil.debugLog("socket echo json: "+echojson);
                 final Socket mSocket= EchoSocket.getInstance(echourl);
                 mSocket.connect();
                 mSocket.emit("echo",echojson);
                 mSocket.on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
                         @Override
                         public void call(Object... args) {
-                                if(args.length>0) LogUtil.infoLog("Socket.DISCONNECT: "+args[0].toString());
+                                LogUtil.infoLog("Socket.DISCONNECT: "+objs2str(args));
                                 //*
                                 LogUtil.infoLog("socket disconnected,try start echo in 5 seconds");
                                 try{
@@ -118,32 +128,45 @@ public class NotificationCollectorMonitorService extends Service {
                                 }catch(InterruptedException e){
                                         e.printStackTrace();
                                 }
+                                mSocket.close();
                                 echoServer();
                                 // */
+                        }
+                });
+                mSocket.on(Socket.EVENT_PING, new Emitter.Listener() {
+                        @Override
+                        public void call(Object... args) {
+                                LogUtil.infoLog("Socket.PING: "+objs2str(args));
+                        }
+                });
+                mSocket.on(Socket.EVENT_PONG, new Emitter.Listener() {
+                        @Override
+                        public void call(Object... args) {
+                                LogUtil.infoLog("Socket.PONG: "+objs2str(args));
                         }
                 });
                 mSocket.on(Socket.EVENT_ERROR, new Emitter.Listener() {
                         @Override
                         public void call(Object... args) {
-                                if(args.length>0) LogUtil.infoLog("Socket.ERROR: "+args[0].toString());
+                                LogUtil.infoLog("Socket.ERROR: "+objs2str(args));
                         }
                 });
                 mSocket.on(Socket.EVENT_CONNECT_ERROR, new Emitter.Listener() {
                         @Override
                         public void call(Object... args) {
-                                if(args.length>0) LogUtil.infoLog("Socket.CONNECT_ERROR: "+args[0].toString());
+                                LogUtil.infoLog("Socket.CONNECT_ERROR: "+objs2str(args));
                         }
                 });
                 mSocket.on(Socket.EVENT_CONNECT_TIMEOUT, new Emitter.Listener() {
                         @Override
                         public void call(Object... args) {
-                                if(args.length>0) LogUtil.infoLog("Socket.CONNECT_TIMEOUT: "+args[0].toString());
+                                LogUtil.infoLog("Socket.CONNECT_TIMEOUT: "+objs2str(args));
                         }
                 });
                 mSocket.on("echo", new Emitter.Listener() {
                         @Override
                         public void call(Object... args) {
-                            String result = args.length>0 ? args[0].toString() : "";
+                            String result = objs2str(args);
                             if (!result.equals("success")) LogUtil.debugLog("socket response message: "+result);
                         }
                 });
@@ -225,7 +248,6 @@ public class NotificationCollectorMonitorService extends Service {
                                         }
                                 }
                                 echoServerBySocketio(preference.getEchoServer(), gson.toJson(devicemap));
-                                LogUtil.debugLog(gson.toJson(devicemap));
                                 return true;
 
                 }
