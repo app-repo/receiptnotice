@@ -110,8 +110,8 @@ public class NotificationCollectorMonitorService extends Service {
                 mSocket.on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
                         @Override
                         public void call(Object... args) {
-                                if(args.length>0) LogUtil.infoLog(args[0].toString());
-                                /*
+                                if(args.length>0) LogUtil.infoLog("Socket.DISCONNECT: "+args[0].toString());
+                                //*
                                 LogUtil.infoLog("socket disconnected,try start echo in 5 seconds");
                                 try{
                                         Thread.sleep(5000);
@@ -125,19 +125,19 @@ public class NotificationCollectorMonitorService extends Service {
                 mSocket.on(Socket.EVENT_ERROR, new Emitter.Listener() {
                         @Override
                         public void call(Object... args) {
-                                if(args.length>0) LogUtil.infoLog(args[0].toString());
+                                if(args.length>0) LogUtil.infoLog("Socket.ERROR: "+args[0].toString());
                         }
                 });
                 mSocket.on(Socket.EVENT_CONNECT_ERROR, new Emitter.Listener() {
                         @Override
                         public void call(Object... args) {
-                                if(args.length>0) LogUtil.infoLog(args[0].toString());
+                                if(args.length>0) LogUtil.infoLog("Socket.CONNECT_ERROR: "+args[0].toString());
                         }
                 });
                 mSocket.on(Socket.EVENT_CONNECT_TIMEOUT, new Emitter.Listener() {
                         @Override
                         public void call(Object... args) {
-                                if(args.length>0) LogUtil.infoLog(args[0].toString());
+                                if(args.length>0) LogUtil.infoLog("Socket.CONNECT_TIMEOUT: "+args[0].toString());
                         }
                 });
                 mSocket.on("echo", new Emitter.Listener() {
