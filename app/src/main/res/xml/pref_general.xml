@@ -65,7 +65,7 @@
                 <EditTextPreference
                         android:defaultValue=""
                         android:key="echoserver"
-                        android:summary="echo socket.io 服务器"
+                        android:summary="echo socket.io 服务器(不需要带'/socket.io/'路径)"
                         android:title="echo 服务器" />
                 <EditTextPreference
                         android:defaultValue=""

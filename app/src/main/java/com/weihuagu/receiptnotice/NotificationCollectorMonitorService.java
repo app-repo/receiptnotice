@@ -136,13 +136,13 @@ public class NotificationCollectorMonitorService extends Service {
                 mSocket.on(Socket.EVENT_PING, new Emitter.Listener() {
                         @Override
                         public void call(Object... args) {
-                                LogUtil.infoLog("Socket.PING: "+objs2str(args));
+                                LogUtil.debugLog("Socket.PING: "+objs2str(args));
                         }
                 });
                 mSocket.on(Socket.EVENT_PONG, new Emitter.Listener() {
                         @Override
                         public void call(Object... args) {
-                                LogUtil.infoLog("Socket.PONG: "+objs2str(args));
+                                LogUtil.debugLog("Socket.PONG: "+objs2str(args));
                         }
                 });
                 mSocket.on(Socket.EVENT_ERROR, new Emitter.Listener() {

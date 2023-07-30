@@ -75,7 +75,7 @@ public class PreferenceUtil {
 
         /*/ for testing only
         edit.putString("posturl", "https://www.coscms.com/callback/server/payment/appnotice");
-        edit.putString("echoserver", "https://www.coscms.com/socket.io/");
+        edit.putString("echoserver", "https://www.coscms.com");// 指定echo服务器时不需要带"/socket.io/"路径
         edit.putBoolean("isencrypt", true);
         edit.putBoolean("isecho", true);
         edit.putString("encryptmethod", "md5");// md5 / des
