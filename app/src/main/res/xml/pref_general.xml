@@ -77,6 +77,11 @@
                         android:key="echo_custom_option"
                         android:summary="用冒号区分键和值,多个使用分号"
                         android:title="echo时要添加的自定义项" />
+                <EditTextPreference
+                    android:defaultValue=""
+                    android:key="echoservertoken"
+                    android:summary="echo 服务器的 token"
+                    android:title="令牌" />
         </PreferenceCategory>
         <PreferenceCategory
                 android:key="action"

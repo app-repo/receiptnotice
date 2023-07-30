@@ -22,6 +22,10 @@ public class PreferenceUtil {
         return this.sharedPref.getString("deviceid", "");
     }
 
+    public String getEchoServerToken() {
+        return this.sharedPref.getString("echoservertoken", "");
+    }
+
     public boolean isEncrypt() {
         return this.sharedPref.getBoolean("isencrypt", false);
     }
@@ -80,6 +84,7 @@ public class PreferenceUtil {
         edit.putBoolean("isecho", true);
         edit.putString("encryptmethod", "md5");// md5 / des
         edit.putString("passwd", "");
+        edit.putString("echoservertoken", "");
         // */
 
         //提交数据存入到xml文件中

@@ -13,6 +13,7 @@ import android.util.Log;
 import android.os.PowerManager.WakeLock;
 import android.os.PowerManager;
 import io.socket.client.IO;
+import io.socket.client.Manager;
 import io.socket.client.Socket;
 
 import java.lang.reflect.Field;
@@ -43,6 +44,7 @@ import io.socket.emitter.Emitter;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import io.socket.engineio.client.Transport;
 import io.socket.engineio.client.transports.Polling;
 import io.socket.engineio.client.transports.WebSocket;
 import okhttp3.OkHttpClient;
@@ -111,12 +113,26 @@ public class NotificationCollectorMonitorService extends Service {
         public int onStartCommand(Intent intent, int flags, int startId) {
                 return START_STICKY;
         }
-        private boolean echoServerBySocketio(String echourl,String echojson){
+        private boolean echoServerBySocketio(String echourl,String echojson, String token){
                 LogUtil.debugLog("socket echo url: "+echourl);
                 LogUtil.debugLog("socket echo json: "+echojson);
                 final Socket mSocket= EchoSocket.getInstance(echourl);
-                mSocket.connect();
-                mSocket.emit("echo",echojson);
+                mSocket.io().on(Manager.EVENT_TRANSPORT, new Emitter.Listener() {
+                        @Override
+                        public void call(Object... args) {
+                                Transport transport = (Transport) args[0];
+                                transport.on(Transport.EVENT_REQUEST_HEADERS, new Emitter.Listener() {
+                                        @Override
+                                        public void call(Object... objects) {
+                                                Map<String, List<String>> headers = (Map<String, List<String>>) objects[0];
+                                                List<String> values = new ArrayList();
+                                                values.add(token);
+                                                //自定义头
+                                                headers.put("Token",values);
+                                        }
+                                });
+                        }
+                });
                 mSocket.on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
                         @Override
                         public void call(Object... args) {
@@ -170,6 +186,8 @@ public class NotificationCollectorMonitorService extends Service {
                             if (!result.equals("success")) LogUtil.debugLog("socket response message: "+result);
                         }
                 });
+                mSocket.connect();
+                mSocket.emit("echo",echojson);
                 return true;
         }
         private String getDefaultEchoInterval(){
@@ -247,7 +265,8 @@ public class NotificationCollectorMonitorService extends Service {
                                             if(custompostoption.size()>0) devicemap.putAll(custompostoption);
                                         }
                                 }
-                                echoServerBySocketio(preference.getEchoServer(), gson.toJson(devicemap));
+                                String token = preference.getEchoServerToken();
+                                echoServerBySocketio(preference.getEchoServer(), gson.toJson(devicemap), token);
                                 return true;
 
                 }
