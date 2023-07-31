@@ -58,9 +58,11 @@ public class HelloFragment extends Fragment {
         numofpush.setText("推送次数："+preference.getNumOfPush());
     }
     private void setTextWithPosturl(){
-        if(preference.getPostUrl()!=null)
-            posturl.setText("目前的推送地址："+preference.getPostUrl());
-
+        if(preference.getPostUrl()!=null) {
+            posturl.setText("推送地址：" + preference.getPostUrl());
+        }else{
+            posturl.setText("推送地址：(未设置)");
+        }
     }
     private void setTextWithServicestatus(){
         Context context = getContext();
