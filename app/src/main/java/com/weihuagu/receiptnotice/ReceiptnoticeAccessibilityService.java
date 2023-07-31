@@ -3,6 +3,7 @@ package com.weihuagu.receiptnotice;
 import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.GestureDescription;
 import android.app.KeyguardManager;
+import android.app.Notification;
 import android.content.Context;
 import android.graphics.Path;
 import android.os.Build;
@@ -18,6 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;
 
 import com.jeremyliao.liveeventbus.LiveEventBus;
+import com.weihuagu.receiptnotice.action.HandlePost;
 import com.weihuagu.receiptnotice.filteringmiddleware.AlipayTransferBean;
 import com.weihuagu.receiptnotice.util.LogUtil;
 import com.weihuagu.receiptnotice.util.message.MessageConsumer;
@@ -50,10 +52,8 @@ public class ReceiptnoticeAccessibilityService extends AccessibilityService impl
         pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         mKeyguardManager = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
         kl = mKeyguardManager.newKeyguardLock("myapp:kllock");
-
-
-
     }
+
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
 
@@ -63,7 +63,27 @@ public class ReceiptnoticeAccessibilityService extends AccessibilityService impl
         switch (eventType) {
             //当通知栏发生改变时
             case AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED:
-
+                /* / debug
+                Notification notification = new Notification();
+                String pkg = event.getPackageName().toString();
+                String content = "";
+                for (Object text : event.getText()) {
+                    content+=text.toString();
+                }
+                // 设置通知标题
+                notification.extras.putString(Notification.EXTRA_TITLE,"");
+                // 设置通知内容
+                notification.extras.putString(Notification.EXTRA_TEXT,content);
+                NotificationHandle notihandle =new NotificationHandleFactory().getNotificationHandle(pkg,notification,new HandlePost());
+                if(notihandle != null){
+                    //notihandle.setStatusBarNotification(sbn);
+                    //notihandle.setActionStatusbar(this);
+                    notihandle.printNotify();
+                    notihandle.handleNotification();
+                    notihandle.removeNotification();
+                    return;
+                }
+                */
                 break;
             //当窗口的状态发生改变时
             case AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED:
@@ -71,8 +91,6 @@ public class ReceiptnoticeAccessibilityService extends AccessibilityService impl
                 getAlipayTransferInfo(className);
                 break;
         }
-
-
     }
 
     @Override

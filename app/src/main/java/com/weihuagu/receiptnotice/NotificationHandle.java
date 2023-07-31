@@ -53,8 +53,9 @@ public abstract class NotificationHandle {
 
 
         protected void removeNotification(){
-                if(actionstatusbar==null|sbn==null)
-                        return ;
+                if(actionstatusbar==null||sbn==null) {
+                        return;
+                }
                 actionstatusbar.removeNotification(sbn);
         }
 
