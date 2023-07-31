@@ -5,11 +5,12 @@
  */
 
 package com.weihuagu.receiptnotice.util;
+
 import java.util.Random;
 
 public class RandomUtil {
-    public static String  getRandomTaskNum(){
-            Random rand = new Random();
-            return String.valueOf(rand.nextInt(9000) + 1000);
+    public static String getRandomTaskNum() {
+        Random rand = new Random();
+        return String.valueOf(rand.nextInt(9000) + 1000);
     }
 }

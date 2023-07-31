@@ -1,47 +1,35 @@
 package com.weihuagu.receiptnotice.util.encrypt;
-import com.weihuagu.receiptnotice.util.encrypt.Encrypter;
 
-import java.util.Map;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 public class AES extends Encrypter {
-        public AES(String key){
-                super(key);
-        }
-        public Map<String,String> transferMapValue(Map<String, String> params){
-                Map<String,String> postmap=new HashMap<String,String>();
-                Iterator entries = params.entrySet().iterator();
-                while (entries.hasNext()) {
+    public AES(String key) {
+        super(key);
+    }
 
-                        Map.Entry entry = (Map.Entry) entries.next();
+    public Map<String, String> transferMapValue(Map<String, String> params) {
+        Map<String, String> postmap = new HashMap<String, String>();
+        Iterator entries = params.entrySet().iterator();
+        while (entries.hasNext()) {
 
-                        String paramkey = (String)entry.getKey();
+            Map.Entry entry = (Map.Entry) entries.next();
 
-                        String paramvalue = (String)entry.getValue();
+            String paramkey = (String) entry.getKey();
 
-                        //String aesStr = AESUtil.aes(paramvalue, key, Cipher.ENCRYPT_MODE);
-                        String aesStr=null;
-                        postmap.put(paramkey,aesStr);
+            String paramvalue = (String) entry.getValue();
 
-                }
-                postmap.put("encrypt","1");
-                return postmap;
-
-
-
+            //String aesStr = AESUtil.aes(paramvalue, key, Cipher.ENCRYPT_MODE);
+            String aesStr = null;
+            postmap.put(paramkey, aesStr);
 
         }
+        postmap.put("encrypt", "1");
+        return postmap;
 
 
-
-
-
-
-
-
-
-
+    }
 
 
 }

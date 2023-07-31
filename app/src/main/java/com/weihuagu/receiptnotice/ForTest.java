@@ -1,29 +1,27 @@
 package com.weihuagu.receiptnotice;
 
-import android.app.Application;
 import android.app.Notification;
-import android.content.Intent;
-import android.content.Context.*;
-import android.app.PendingIntent;
 import android.app.Notification.Builder;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.widget.Toast;
-
 
 import com.weihuagu.receiptnotice.action.HandlePost;
 import com.weihuagu.receiptnotice.view.MainActivity;
 
 public class ForTest {
-    public void makeAPostTest(String pkg, Notification notification){
+    public void makeAPostTest(String pkg, Notification notification) {
         //接受推送处理
-        NotificationHandle notihandle =new NotificationHandleFactory().getNotificationHandle(pkg,notification,new HandlePost());
-        if(notihandle!=null){
+        NotificationHandle notihandle = new NotificationHandleFactory().getNotificationHandle(pkg, notification, new HandlePost());
+        if (notihandle != null) {
             notihandle.printNotify();
             notihandle.handleNotification();
             notihandle.removeNotification();
             return;
         }
     }
+
     private void GenerateNotification() {
         Intent intent = new Intent(MainApplication.getAppContext(), MainActivity.class);
         PendingIntent pintent = PendingIntent.getActivity(MainApplication.getAppContext(), 0, intent, 0);

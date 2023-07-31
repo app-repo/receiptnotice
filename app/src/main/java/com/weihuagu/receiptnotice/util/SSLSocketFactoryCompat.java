@@ -1,4 +1,5 @@
 package com.weihuagu.receiptnotice.util;
+
 import android.os.Build;
 
 import java.io.IOException;
@@ -11,7 +12,7 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 
-public class SSLSocketFactoryCompat extends SSLSocketFactory{
+public class SSLSocketFactoryCompat extends SSLSocketFactory {
     private static final String[] TLS_V12_ONLY = {"TLSv1.2"};
 
     private final SSLSocketFactory delegate;
@@ -28,7 +29,7 @@ public class SSLSocketFactoryCompat extends SSLSocketFactory{
         }
         this.delegate = delegate;
     }
-    
+
     @Override
     public String[] getDefaultCipherSuites() {
         return delegate.getDefaultCipherSuites();

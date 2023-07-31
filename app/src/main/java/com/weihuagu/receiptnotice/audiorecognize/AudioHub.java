@@ -1,25 +1,22 @@
 package com.weihuagu.receiptnotice.audiorecognize;
-import java.io.File;
-import java.io.IOException;
-import java.util.Collection;
-import java.util.HashSet;
 
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder.AudioSource;
 
+import java.io.IOException;
+
 public class AudioHub {
-    private boolean isRecord = false;
     private final static int sampleRate = 8000;
-    private static int channelConfig = AudioFormat.CHANNEL_IN_STEREO;
-    private int bufferSize = 0;
-    private int bufferSizeInBytes =AudioRecord.getMinBufferSize(sampleRate,
-            channelConfig, AudioFormat.ENCODING_PCM_16BIT);
-
+    private static final int channelConfig = AudioFormat.CHANNEL_IN_STEREO;
     private final AudioRecord recorder;
+    private final int bufferSizeInBytes = AudioRecord.getMinBufferSize(sampleRate,
+            channelConfig, AudioFormat.ENCODING_PCM_16BIT);
+    private boolean isRecord = false;
+    private int bufferSize = 0;
 
-    public AudioHub() throws IOException{
-        bufferSize=bufferSizeInBytes;
+    public AudioHub() throws IOException {
+        bufferSize = bufferSizeInBytes;
         recorder = new AudioRecord(
                 AudioSource.VOICE_RECOGNITION, sampleRate,
                 AudioFormat.CHANNEL_IN_MONO,
@@ -38,6 +35,7 @@ public class AudioHub {
         // 开启音频文件写入线程
         new Thread(new AudioRecordThread()).start();
     }
+
     private void stopRecord() {
         close();
     }
@@ -51,7 +49,7 @@ public class AudioHub {
         }
     }
 
-    private void getRecordData(){
+    private void getRecordData() {
         short[] buffer = new short[bufferSize];
         recorder.read(buffer, 0, buffer.length); // Skip the first buffer, usually zeroes
 
@@ -64,7 +62,6 @@ public class AudioHub {
 
         }
     }
-
 
 
 }

@@ -1,30 +1,27 @@
 package com.weihuagu.receiptnotice.view;
 
 import android.os.Bundle;
-import android.webkit.WebView;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
+
+import com.weihuagu.receiptnotice.ForTest;
+import com.weihuagu.receiptnotice.R;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.weihuagu.receiptnotice.R;
-import com.weihuagu.receiptnotice.ForTest;
-
-
-import org.w3c.dom.Text;
-import android.widget.Button;
-import android.view.View;
-
-public class TestActiviy extends AppCompatActivity implements View.OnClickListener{
+public class TestActiviy extends AppCompatActivity implements View.OnClickListener {
 
     private TextView money;
     private Button button;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
-        money = (TextView) findViewById(R.id.money);
-        button = (Button) findViewById(R.id.action_nitification);
+        money = findViewById(R.id.money);
+        button = findViewById(R.id.action_nitification);
         button.setOnClickListener(this);
 
     }

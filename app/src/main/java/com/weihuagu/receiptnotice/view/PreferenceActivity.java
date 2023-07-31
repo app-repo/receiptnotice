@@ -1,15 +1,16 @@
 package com.weihuagu.receiptnotice.view;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
 import android.provider.Settings;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.weihuagu.receiptnotice.util.AuthorityUtil;
 import com.weihuagu.receiptnotice.MainApplication;
 import com.weihuagu.receiptnotice.R;
+import com.weihuagu.receiptnotice.util.AuthorityUtil;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class PreferenceActivity extends AppCompatActivity {
 
@@ -30,7 +31,7 @@ public class PreferenceActivity extends AppCompatActivity {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
             if (s.equals("isaccessibilityservice") && sharedPreferences.getBoolean(s, false) == true) {
-                if (! AuthorityUtil.isAccessibilitySettingsOn(MainApplication.getAppContext()))
+                if (!AuthorityUtil.isAccessibilitySettingsOn(MainApplication.getAppContext()))
                     startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS));
             }
         }

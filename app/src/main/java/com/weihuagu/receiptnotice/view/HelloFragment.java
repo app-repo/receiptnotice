@@ -1,20 +1,13 @@
 package com.weihuagu.receiptnotice.view;
 
 import android.app.ActivityManager;
-import android.content.ComponentName;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Process;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 
 import com.jeremyliao.liveeventbus.LiveEventBus;
 import com.weihuagu.receiptnotice.MainApplication;
@@ -25,6 +18,10 @@ import com.weihuagu.receiptnotice.util.PreferenceUtil;
 
 import java.util.List;
 
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+
 public class HelloFragment extends Fragment {
     private TextView numofpush;
     private TextView posturl;
@@ -34,7 +31,7 @@ public class HelloFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootview=inflater.inflate(R.layout.fragment_hello,container, false);
+        rootview = inflater.inflate(R.layout.fragment_hello, container, false);
         return rootview;
     }
 
@@ -45,26 +42,29 @@ public class HelloFragment extends Fragment {
         subMessage();
     }
 
-    private void initView(){
-        preference=new PreferenceUtil(getContext());
-        numofpush=(TextView)rootview.findViewById(R.id.numofpush);
+    private void initView() {
+        preference = new PreferenceUtil(getContext());
+        numofpush = rootview.findViewById(R.id.numofpush);
         setTextWithNumofpush();
-        posturl=(TextView)rootview.findViewById(R.id.posturl);
+        posturl = rootview.findViewById(R.id.posturl);
         setTextWithPosturl();
-        servicestatus=(TextView)rootview.findViewById(R.id.servicestatus);
+        servicestatus = rootview.findViewById(R.id.servicestatus);
         setTextWithServicestatus();
     }
-    private void setTextWithNumofpush(){
-        numofpush.setText("推送次数："+preference.getNumOfPush());
+
+    private void setTextWithNumofpush() {
+        numofpush.setText("推送次数：" + preference.getNumOfPush());
     }
-    private void setTextWithPosturl(){
-        if(preference.getPostUrl()!=null) {
+
+    private void setTextWithPosturl() {
+        if (preference.getPostUrl() != null) {
             posturl.setText("推送地址：" + preference.getPostUrl());
-        }else{
+        } else {
             posturl.setText("推送地址：(未设置)");
         }
     }
-    private void setTextWithServicestatus(){
+
+    private void setTextWithServicestatus() {
         Context context = getContext();
         if (context == null) {
             servicestatus.setText("服务状态：null");
@@ -74,7 +74,7 @@ public class HelloFragment extends Fragment {
         ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         boolean collectorRunning = false;
         List<ActivityManager.RunningServiceInfo> runningServices = manager.getRunningServices(Integer.MAX_VALUE);
-        if (runningServices != null ) {
+        if (runningServices != null) {
             for (ActivityManager.RunningServiceInfo service : runningServices) {
                 String mName = service.service.getClassName();
                 if (mName.equals(serviceName)) {
@@ -83,20 +83,22 @@ public class HelloFragment extends Fragment {
                 }
             }
         }
-        if(collectorRunning) {
+        if (collectorRunning) {
             servicestatus.setText("服务状态：运行中");
-        }else{
+        } else {
             servicestatus.setText("服务状态：未运行(请尝试重启手机)");
         }
     }
-    private void resetText(){
+
+    private void resetText() {
         setTextWithPosturl();
         setTextWithNumofpush();
         setTextWithServicestatus();
     }
-    private void subMessage(){
+
+    private void subMessage() {
         LiveEventBus
-                .get("message_finished_one_post",String[].class)
+                .get("message_finished_one_post", String[].class)
                 .observeForever(new Observer<String[]>() {
                     @Override
                     public void onChanged(@Nullable String[] testpostbean) {
@@ -104,7 +106,7 @@ public class HelloFragment extends Fragment {
                     }
                 });
         LiveEventBus
-                .get("user_set_posturl",String.class)
+                .get("user_set_posturl", String.class)
                 .observeForever(new Observer<String>() {
                     @Override
                     public void onChanged(@Nullable String url) {
@@ -112,7 +114,7 @@ public class HelloFragment extends Fragment {
                     }
                 });
         LiveEventBus
-                .get("time_interval",String.class)
+                .get("time_interval", String.class)
                 .observeForever(new Observer<String>() {
                     @Override
                     public void onChanged(@Nullable String baseinterval) {

@@ -4,7 +4,7 @@ import java.util.Map;
 
 public class TestBeanWithPostFullInformationMap {
     private String posturl;
-    private Map<String,String> infomap;
+    private Map<String, String> infomap;
     private String pkg;
 
     public String getPosturl() {

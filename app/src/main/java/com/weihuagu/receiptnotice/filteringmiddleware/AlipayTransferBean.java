@@ -1,6 +1,9 @@
 package com.weihuagu.receiptnotice.filteringmiddleware;
 
-public class  AlipayTransferBean {
+public class AlipayTransferBean {
+    private String num;
+    private String remark;
+
     public String getNum() {
         return num;
     }
@@ -16,7 +19,4 @@ public class  AlipayTransferBean {
     public void setRemark(String remark) {
         this.remark = remark;
     }
-
-    private String num;
-    private String remark;
 }

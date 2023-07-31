@@ -3,7 +3,6 @@ package com.weihuagu.receiptnotice;
 import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.GestureDescription;
 import android.app.KeyguardManager;
-import android.app.Notification;
 import android.content.Context;
 import android.graphics.Path;
 import android.os.Build;
@@ -15,11 +14,7 @@ import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.view.accessibility.AccessibilityWindowInfo;
 
-import androidx.annotation.Nullable;
-import androidx.lifecycle.Observer;
-
 import com.jeremyliao.liveeventbus.LiveEventBus;
-import com.weihuagu.receiptnotice.action.HandlePost;
 import com.weihuagu.receiptnotice.filteringmiddleware.AlipayTransferBean;
 import com.weihuagu.receiptnotice.util.LogUtil;
 import com.weihuagu.receiptnotice.util.message.MessageConsumer;
@@ -29,24 +24,29 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
+
 public class ReceiptnoticeAccessibilityService extends AccessibilityService implements MessageConsumer {
-    PowerManager pm=null;
-    String TAG="onAccessibilityEvent";
+    PowerManager pm = null;
+    String TAG = "onAccessibilityEvent";
     private PowerManager.WakeLock mWakeLock = null;
     private KeyguardManager mKeyguardManager;
     private KeyguardManager.KeyguardLock kl;
     private String lastpoststr = "";
     private String lastnotistr = "";
-    private Queue<String> poststrqueue = new LinkedList<String>();
-    private void setLastPostStr(String str){
-        lastpoststr=str;
+    private final Queue<String> poststrqueue = new LinkedList<String>();
+
+    private void setLastPostStr(String str) {
+        lastpoststr = str;
     }
 
-    private void setLastNotiStr(String str){
-        lastnotistr=str;
+    private void setLastNotiStr(String str) {
+        lastnotistr = str;
     }
+
     @Override
-    public void onServiceConnected(){
+    public void onServiceConnected() {
         debugLogWithDeveloper("accessibility service connected");
         subMessage();
         pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
@@ -57,7 +57,7 @@ public class ReceiptnoticeAccessibilityService extends AccessibilityService impl
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
 
-        debugLogWithDeveloper( event.toString());
+        debugLogWithDeveloper(event.toString());
         final int eventType = event.getEventType();
         //根据事件回调类型进行处理
         switch (eventType) {
@@ -95,11 +95,11 @@ public class ReceiptnoticeAccessibilityService extends AccessibilityService impl
 
     @Override
     public void onInterrupt() {
-        debugLogWithDeveloper(  "oninterrupt");
+        debugLogWithDeveloper("oninterrupt");
     }
 
-    private void mockSwipe(){
-        if(Build.VERSION.SDK_INT >= 24) {
+    private void mockSwipe() {
+        if (Build.VERSION.SDK_INT >= 24) {
             //获取屏幕中心点坐标
             WindowManager wm = (WindowManager) MainApplication.getAppContext()
                     .getSystemService(Context.WINDOW_SERVICE);
@@ -107,7 +107,7 @@ public class ReceiptnoticeAccessibilityService extends AccessibilityService impl
             wm.getDefaultDisplay().getMetrics(dm);
             int width = dm.widthPixels;
             int height = dm.heightPixels;
-            int cx = width/2;
+            int cx = width / 2;
             int cy = height / 2;
             final Path path = new Path();
 
@@ -132,19 +132,19 @@ public class ReceiptnoticeAccessibilityService extends AccessibilityService impl
                     Log.d(TAG, " swipe  fail.");
                     path.close();
                 }
-            },null);
+            }, null);
         }
     }
 
 
-    public void subMessage(){
+    public void subMessage() {
         LiveEventBus
                 .get("action_request_return", String.class)
-                .observeForever( new Observer<String>() {
+                .observeForever(new Observer<String>() {
                     @Override
                     public void onChanged(@Nullable String s) {
                         LogUtil.debugLog("收到订阅消息:action_request_return " + s);
-                        if(s.equals("return")){
+                        if (s.equals("return")) {
                             performGlobalAction(GLOBAL_ACTION_BACK);
 
                         }
@@ -152,11 +152,11 @@ public class ReceiptnoticeAccessibilityService extends AccessibilityService impl
                 });
         LiveEventBus
                 .get("action_request_home", String.class)
-                .observeForever( new Observer<String>() {
+                .observeForever(new Observer<String>() {
                     @Override
                     public void onChanged(@Nullable String s) {
                         LogUtil.debugLog("收到订阅消息:action_request_home " + s);
-                        if(s.equals("home")){
+                        if (s.equals("home")) {
                             performGlobalAction(GLOBAL_ACTION_HOME);
 
                         }
@@ -164,7 +164,7 @@ public class ReceiptnoticeAccessibilityService extends AccessibilityService impl
                 });
         LiveEventBus
                 .get("message_noti_alipay_transfer_arrive", String.class)
-                .observeForever( new Observer<String>() {
+                .observeForever(new Observer<String>() {
                     @Override
                     public void onChanged(@Nullable String s) {
                         LogUtil.debugLog("收到订阅消息:message_noti_alipay_transfer_arrive " + s);
@@ -176,7 +176,7 @@ public class ReceiptnoticeAccessibilityService extends AccessibilityService impl
 
         LiveEventBus
                 .get("update_laststr", String.class)
-                .observeForever( new Observer<String>() {
+                .observeForever(new Observer<String>() {
                     @Override
                     public void onChanged(@Nullable String s) {
                         LogUtil.debugLog("收到订阅消息:update_laststr " + s);
@@ -187,61 +187,60 @@ public class ReceiptnoticeAccessibilityService extends AccessibilityService impl
 
     }
 
-    public void getAlipayTransferInfo(String classname){
+    public void getAlipayTransferInfo(String classname) {
 
-        String transnumid="com.alipay.mobile.chatapp:id/biz_desc";
-        String transremarkid="com.alipay.mobile.chatapp:id/biz_title";
-        debugLogWithDeveloper( ":窗口状态改变,类名为"+classname);
-        if(classname.equals("com.alipay.mobile.chatapp.ui.PersonalChatMsgActivity_")){
+        String transnumid = "com.alipay.mobile.chatapp:id/biz_desc";
+        String transremarkid = "com.alipay.mobile.chatapp:id/biz_title";
+        debugLogWithDeveloper(":窗口状态改变,类名为" + classname);
+        if (classname.equals("com.alipay.mobile.chatapp.ui.PersonalChatMsgActivity_")) {
             mockSwipe();
-            AccessibilityNodeInfo nodepersonalchat=null;
-            AccessibilityWindowInfo windowInfopersonalchat=null;
-            if(pm.isScreenOn()) {
-                 nodepersonalchat= getRootInActiveWindow();
-            }else {
-                if(Build.VERSION.SDK_INT >= 21) {
+            AccessibilityNodeInfo nodepersonalchat = null;
+            AccessibilityWindowInfo windowInfopersonalchat = null;
+            if (pm.isScreenOn()) {
+                nodepersonalchat = getRootInActiveWindow();
+            } else {
+                if (Build.VERSION.SDK_INT >= 21) {
                     windowInfopersonalchat = getWindows().get(1);
-                    nodepersonalchat=windowInfopersonalchat.getRoot();
+                    nodepersonalchat = windowInfopersonalchat.getRoot();
                 }
             }
-            if (nodepersonalchat== null) {
+            if (nodepersonalchat == null) {
                 return;
             }
             // 找到领取红包的点击事件
             try {
                 List<AccessibilityNodeInfo> list = nodepersonalchat.findAccessibilityNodeInfosByViewId(transnumid);
-                AccessibilityNodeInfo thelastnode= list.get(list.size() - 1);
+                AccessibilityNodeInfo thelastnode = list.get(list.size() - 1);
                 String transnum = thelastnode.getText().toString();
-                List<AccessibilityNodeInfo> remarklist=thelastnode.getParent().findAccessibilityNodeInfosByViewId(transremarkid);
-                String transremark=remarklist.get(remarklist.size()-1).getText().toString();
+                List<AccessibilityNodeInfo> remarklist = thelastnode.getParent().findAccessibilityNodeInfosByViewId(transremarkid);
+                String transremark = remarklist.get(remarklist.size() - 1).getText().toString();
                 debugLogWithDeveloper(":金额为" + transnum);
                 debugLogWithDeveloper(":备注为" + transremark);
-                AlipayTransferBean transferbean=new AlipayTransferBean();
+                AlipayTransferBean transferbean = new AlipayTransferBean();
                 transferbean.setNum(transnum);
                 transferbean.setRemark(transremark);
-                if(!poststrqueue.poll().equals(lastnotistr))
-                MessageSendBus.postMessageWithget_alipay_transfer_money(transferbean);
-            }catch (ArrayIndexOutOfBoundsException e){
+                if (!poststrqueue.poll().equals(lastnotistr))
+                    MessageSendBus.postMessageWithget_alipay_transfer_money(transferbean);
+            } catch (ArrayIndexOutOfBoundsException e) {
 
             }
         }
 
     }
 
-    public void debugLogWithDeveloper(String info){
-        Log.d(TAG,info);
+    public void debugLogWithDeveloper(String info) {
+        Log.d(TAG, info);
     }
 
     /**
      * 唤醒屏幕和解锁
+     *
      * @param unLock 是否点亮屏幕
      */
-    private void wakeAndUnlock(boolean unLock)
-    {
-        if(unLock)
-        {
+    private void wakeAndUnlock(boolean unLock) {
+        if (unLock) {
             //若为黑屏状态则唤醒屏幕
-            if(!pm.isScreenOn()) {
+            if (!pm.isScreenOn()) {
                 //获取电源管理器对象，ACQUIRE_CAUSES_WAKEUP这个参数能从黑屏唤醒屏幕
                 mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "myapp:bright");
                 //点亮屏幕
@@ -249,11 +248,9 @@ public class ReceiptnoticeAccessibilityService extends AccessibilityService impl
                 kl.disableKeyguard();
                 Log.i("QHB", "亮屏");
             }
-        }
-        else
-        {
+        } else {
             //若之前唤醒过屏幕则释放使屏幕不保持常亮
-            if(mWakeLock != null) {
+            if (mWakeLock != null) {
                 mWakeLock.release();
                 mWakeLock = null;
                 Log.i("QHB", "锁屏");

@@ -1,50 +1,43 @@
 package com.weihuagu.receiptnotice.view;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.content.DialogInterface;
-import android.view.MenuItem;
-import android.view.Menu;
-import android.content.SharedPreferences;
-import android.widget.Toast;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.core.app.NotificationManagerCompat;
-
-import android.view.View;
-import android.widget.Button;
-import android.widget.AutoCompleteTextView;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import androidx.appcompat.widget.Toolbar;
-
+import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+import android.widget.Toast;
 
-import androidx.viewpager2.widget.ViewPager2;
-
-import com.github.pedrovgs.lynx.LynxConfig;
 import com.github.pedrovgs.lynx.LynxActivity;
+import com.github.pedrovgs.lynx.LynxConfig;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.weihuagu.receiptnotice.MainApplication;
-import com.weihuagu.receiptnotice.util.PreferenceUtil;
 import com.weihuagu.receiptnotice.R;
+import com.weihuagu.receiptnotice.util.PreferenceUtil;
 import com.weihuagu.receiptnotice.util.message.MessageSendBus;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.viewpager2.widget.ViewPager2;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "MainActivity";
+    public PreferenceUtil preference;
     private Toolbar myToolbar;
     private ViewPager2 viewpage;
     private Button btnsetposturl;
     private FloatingActionButton btnshowlog;
     private AutoCompleteTextView posturltextview;
     private SharedPreferences sp;
-    public PreferenceUtil preference ;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,16 +53,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         preference = new PreferenceUtil(this);
         sp = getSharedPreferences("url", Context.MODE_PRIVATE);
-        myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        myToolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
         ViewPager2 viewpage = findViewById(R.id.viewpager);
         HomeFragmentsAdapter viewpageadapter = new HomeFragmentsAdapter(this);
         viewpage.setAdapter(viewpageadapter);
-        btnsetposturl = (Button) findViewById(R.id.btnsetposturl);
+        btnsetposturl = findViewById(R.id.btnsetposturl);
         btnsetposturl.setOnClickListener(this);
-        btnshowlog = (FloatingActionButton) findViewById(R.id.floatingshowlog);
+        btnshowlog = findViewById(R.id.floatingshowlog);
         btnshowlog.setOnClickListener(this);
-        posturltextview = (AutoCompleteTextView) findViewById(R.id.posturl);
+        posturltextview = findViewById(R.id.posturl);
         if (getPostUrl() != null)
             posturltextview.setHint(getPostUrl());
 
@@ -125,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void setPostUrl() {
-        PreferenceUtil preference=new PreferenceUtil(getBaseContext());
+        PreferenceUtil preference = new PreferenceUtil(getBaseContext());
         preference.setPostUrl(posturltextview.getText().toString());
         MessageSendBus.userMessageWithSetPostUrl(posturltextview.getText().toString());
         Toast.makeText(getApplicationContext(), "已经设置posturl为：" + preference.getPostUrl(),
@@ -133,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private String getPostUrl() {
-        PreferenceUtil preference=new PreferenceUtil(MainApplication.getAppContext());
+        PreferenceUtil preference = new PreferenceUtil(MainApplication.getAppContext());
         return preference.getPostUrl();
     }
 
@@ -146,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void posturlSuggestion() {
         String[] str = new String[2];
         str[0] = "";
-        if(getPostUrl()!=null)
+        if (getPostUrl() != null)
             str[1] = getPostUrl();
         else str[1] = "";
         posturltextview.setThreshold(0);
@@ -157,7 +150,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onFocusChange(View v, boolean hasFocus) {
                 AutoCompleteTextView view = (AutoCompleteTextView) v;
                 if (hasFocus) {
-                        view.showDropDown();
+                    view.showDropDown();
 
                 }
             }

@@ -12,9 +12,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PostMapFilter {
-    private Map<String, String> unmodifiedmap;
-    private PreferenceUtil preference;
-    private String posturl;
+    private final Map<String, String> unmodifiedmap;
+    private final PreferenceUtil preference;
+    private final String posturl;
 
     public PostMapFilter(PreferenceUtil preference, Map<String, String> unmodifiedmap, String posturl) {
         this.preference = preference;
@@ -25,7 +25,8 @@ public class PostMapFilter {
     public String getDeviceid() {
         String deviceid = preference.getDeviceid();
         if (deviceid.equals("")) deviceid = DeviceInfoUtil.getUniquePsuedoID();
-        else if (preference.isAppendDeviceiduuid()) deviceid = deviceid + '-' + DeviceInfoUtil.getUniquePsuedoID();
+        else if (preference.isAppendDeviceiduuid())
+            deviceid = deviceid + '-' + DeviceInfoUtil.getUniquePsuedoID();
 
         return deviceid;
     }
@@ -34,7 +35,7 @@ public class PostMapFilter {
     public Map getPostMap() {
         Map<String, String> postmap = new HashMap<String, String>();
         postmap.putAll(getLogMap());
-        postmap.put("sign",new MD5().getSignMd5(postmap.get("type"),postmap.get("money")));
+        postmap.put("sign", new MD5().getSignMd5(postmap.get("type"), postmap.get("money")));
         if (preference.isEncrypt()) {
             String encrypt_type = preference.getEncryptMethod();
             if (encrypt_type != null) {

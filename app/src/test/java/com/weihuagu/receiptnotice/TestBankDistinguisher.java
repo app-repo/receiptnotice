@@ -1,5 +1,5 @@
 package com.weihuagu.receiptnotice;
-import com.weihuagu.receiptnotice.pushclassification.pmentay.BankDistinguisher;
+import com.weihuagu.receiptnotice.pushclassification.payment.BankDistinguisher;
 
 import junit.framework.TestCase;
 
