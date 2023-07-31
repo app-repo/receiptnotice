@@ -207,6 +207,7 @@ public class NotificationCollectorMonitorService extends Service {
         this.timer = new Timer();
         int intervalmilliseconds = Integer.parseInt(this.echointerval) * 1000;
         LogUtil.infoLog("now socketio timer milliseconds:" + intervalmilliseconds);
+        echotimertask.run(); // 先马上运行
         timer.schedule(echotimertask, 5 * 1000, intervalmilliseconds);
     }
 
