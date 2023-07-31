@@ -37,11 +37,11 @@ public class IcbcelifePaymentNotificationHandle extends PaymentNotificationHandl
 
     @Override
     protected String extractMoney(String content) {
-        Pattern pattern = Pattern.compile("(收到|收款|向你付款)(([1-9]{1}\\d*)|([0]{1}))(\\.(\\d){0,2})?元");
+        Pattern pattern = Pattern.compile("(收到|收款|向你付款)([1-9]\\d*|[0])(\\.\\d{0,2})?元");
         Matcher matcher = pattern.matcher(content);
         if (matcher.find()) {
             String tmp = matcher.group();
-            Pattern patternnum = Pattern.compile("(([1-9]{1}\\d*)|([0]{1}))(\\.(\\d){0,2})?");
+            Pattern patternnum = Pattern.compile("([1-9]\\d*|[0])(\\.\\d{0,2})?");
             Matcher matchernum = patternnum.matcher(tmp);
             if (matchernum.find())
                 return matchernum.group();

@@ -32,8 +32,7 @@ public abstract class PaymentNotificationHandle extends NotificationHandle {
     }
 
     public static String parseMoney(String content) {
-        Pattern pattern = Pattern.compile("(收款|收款￥|向你付款|向您付款|入账|到账)\\s*([1-9]\\d*|0)(\\.\\d{0,2})?\\s*元");
-        Matcher matcher = pattern.matcher(content);
+        Matcher matcher = matchPostContent(content);
         List<String> list = new ArrayList<>();
         while (matcher.find()) {
             list.add(matcher.group());
@@ -42,7 +41,7 @@ public abstract class PaymentNotificationHandle extends NotificationHandle {
         if (list.size() > 0) {
             String tmp = list.get(list.size() - 1);
             System.out.println(tmp);
-            Pattern patternnum = Pattern.compile("([1-9]\\d*|[0])(\\.\\d{0,2})?");
+            Pattern patternnum = Pattern.compile("([1-9]\\d*|0)(\\.\\d{0,2})?");
             Matcher matchernum = patternnum.matcher(tmp);
             if (matchernum.find())
                 return matchernum.group();
@@ -56,10 +55,14 @@ public abstract class PaymentNotificationHandle extends NotificationHandle {
         return parseMoney(content);
     }
 
-    protected boolean predictIsPost(String content) {
-        Pattern pattern = Pattern.compile("(收到|收款|向你付款|向您付款|入账|到帐)\\s*(([1-9]{1}\\d*)|([0]{1}))(\\.(\\d){0,2})?\\s*元");
+    public static Matcher matchPostContent(String content) {
+        Pattern pattern = Pattern.compile("(收到|收款|向你付款|向您付款|入账|到账)\\s*(￥\\s*)?([1-9]\\d*|0)(\\.\\d{0,2})?\\s*元");
         Matcher matcher = pattern.matcher(content);
-            return matcher.find();
+        return matcher;
+    }
+
+    protected boolean predictIsPost(String content) {
+            return matchPostContent(content).find();
 
     }
 
