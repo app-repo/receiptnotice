@@ -1,6 +1,11 @@
 package com.weihuagu.receiptnotice.view;
 
+import android.app.ActivityManager;
+import android.content.ComponentName;
+import android.content.Context;
 import android.os.Bundle;
+import android.os.Process;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,13 +18,17 @@ import androidx.lifecycle.Observer;
 
 import com.jeremyliao.liveeventbus.LiveEventBus;
 import com.weihuagu.receiptnotice.MainApplication;
+import com.weihuagu.receiptnotice.NLService;
 import com.weihuagu.receiptnotice.R;
 import com.weihuagu.receiptnotice.util.LogUtil;
 import com.weihuagu.receiptnotice.util.PreferenceUtil;
 
+import java.util.List;
+
 public class HelloFragment extends Fragment {
     private TextView numofpush;
     private TextView posturl;
+    private TextView servicestatus;
     private View rootview;
     private PreferenceUtil preference;
 
@@ -42,6 +51,8 @@ public class HelloFragment extends Fragment {
         setTextWithNumofpush();
         posturl=(TextView)rootview.findViewById(R.id.posturl);
         setTextWithPosturl();
+        servicestatus=(TextView)rootview.findViewById(R.id.servicestatus);
+        setTextWithServicestatus();
     }
     private void setTextWithNumofpush(){
         numofpush.setText("推送次数"+preference.getNumOfPush());
@@ -51,9 +62,35 @@ public class HelloFragment extends Fragment {
             posturl.setText("目前的推送地址："+preference.getPostUrl());
 
     }
+    private void setTextWithServicestatus(){
+        Context context = getContext();
+        if (context == null) {
+            servicestatus.setText("null");
+            return;
+        }
+        String serviceName = NLService.class.getName();
+        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        boolean collectorRunning = false;
+        List<ActivityManager.RunningServiceInfo> runningServices = manager.getRunningServices(Integer.MAX_VALUE);
+        if (runningServices != null ) {
+            for (ActivityManager.RunningServiceInfo service : runningServices) {
+                String mName = service.service.getClassName();
+                if (mName.equals(serviceName)) {
+                    collectorRunning = true;
+                    break;
+                }
+            }
+        }
+        if(collectorRunning) {
+            servicestatus.setText("运行中");
+        }else{
+            servicestatus.setText("停止");
+        }
+    }
     private void resetText(){
         setTextWithPosturl();
         setTextWithNumofpush();
+        setTextWithServicestatus();
     }
     private void subMessage(){
         LiveEventBus

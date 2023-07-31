@@ -290,6 +290,7 @@ public class NotificationCollectorMonitorService extends Service {
                                                 + ", clientLabel: " + ((service.clientLabel == 0) ? "0" : "(" + getResources().getString(service.clientLabel) + ")"));
                                 if (service.pid == Process.myPid() /*&& service.clientCount > 0 && !TextUtils.isEmpty(service.clientPackage)*/) {
                                         collectorRunning = true;
+                                        break;
                                 }
                         }
                 }

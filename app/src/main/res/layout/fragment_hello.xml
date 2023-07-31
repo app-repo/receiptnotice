@@ -51,6 +51,12 @@
                 android:padding="15dp"
                 android:text=""
                 android:textIsSelectable="true" />
+        <TextView
+                android:id="@+id/servicestatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:text="" />
 
 
         </LinearLayout>
