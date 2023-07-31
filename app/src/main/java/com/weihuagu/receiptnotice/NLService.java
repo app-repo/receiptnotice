@@ -40,9 +40,9 @@ public class NLService extends NotificationListenerService implements  ActionSta
                 //        super.onNotificationPosted(sbn);
                 //这里只是获取了包名和通知提示信息，其他数据可根据需求取，注意空指针就行
 
-                if(getPostUrl()==null)
+                if(getPostUrl() == null) {
                         return;
-
+                }
                 Notification notification = sbn.getNotification();
                 String pkg = sbn.getPackageName();
                 if (notification == null) {
@@ -50,12 +50,12 @@ public class NLService extends NotificationListenerService implements  ActionSta
                 }
 
                 Bundle extras = notification.extras;
-                if(extras==null)
+                if(extras == null) {
                         return;
-
+                }
                 //接受推送处理
                 NotificationHandle notihandle =new NotificationHandleFactory().getNotificationHandle(pkg,notification,new HandlePost());
-                if(notihandle!=null){
+                if(notihandle != null){
                         notihandle.setStatusBarNotification(sbn);
                         notihandle.setActionStatusbar(this);
                         notihandle.printNotify();
@@ -121,7 +121,5 @@ public class NLService extends NotificationListenerService implements  ActionSta
                                         preference.setNumOfPush("add");
                                 }
                         });
-
-
         }
 }
