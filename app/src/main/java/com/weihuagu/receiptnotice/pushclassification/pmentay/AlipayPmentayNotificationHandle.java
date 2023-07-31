@@ -27,26 +27,21 @@ public class AlipayPmentayNotificationHandle extends PmentayNotificationHandle i
 
         }
         public void handleNotification(){
-                if(title.contains("支付宝") | title.contains("收钱码") | title.contains("收款通知")){
-                        //不可将转账判断延后放，以防止通过昵称虚构金额
-                        if(content.contains("向你转了1笔钱")){
-                                transfercodePush();
-				return ;
-                        }
-
-                        if(content.contains("成功收款") | content.contains("向你付款")){
-                                collectioncodePush(true);
-                                return ;
-                        }
+            if(title.contains("支付宝") | title.contains("收钱码") | title.contains("收款通知") | title.contains("收钱提醒")){
+                //不可将转账判断延后放，以防止通过昵称虚构金额
+                if(content.contains("向你转了1笔钱")){
+                    transfercodePush();
+                    return ;
                 }
-		if(isInfoHideInTitle()){
-			collectioncodePush(false);
-			return ;
-		}
-			
 
-
-
+                if(content.contains("成功收款") | content.contains("向你付款") | content.contains("上一笔播报")){
+                    collectioncodePush(true);
+                    return ;
+                }
+            }
+		    if(isInfoHideInTitle()){
+			    collectioncodePush(false);
+		    }
         }
 
 	private void transfercodePush(){
@@ -75,27 +70,23 @@ public class AlipayPmentayNotificationHandle extends PmentayNotificationHandle i
 	
 	private void collectioncodePush(boolean isinfoincontent){
 		  Map<String,String> postmap=new HashMap<String,String>();
-                  postmap.put("type","alipay");
-                  postmap.put("time",notitime);
-                  postmap.put("title","支付宝支付");
+          postmap.put("type","alipay");
+          postmap.put("time",notitime);
+          postmap.put("title","支付宝支付");
 		  if(isinfoincontent){
-                  	postmap.put("money",extractMoney(content));
-                  	postmap.put("content",content);
-		  }else
-		  {
-			postmap.put("money",extractMoney(title));
-                  	postmap.put("content",title);  
+              postmap.put("money",extractMoney(content));
+              postmap.put("content",content);
+		  }else{
+              postmap.put("money",extractMoney(title));
+              postmap.put("content",title);
 		  }
-
-                  postpush.doPost(postmap);
-                  return ;
+          postpush.doPost(postmap);
 	}
 	
 	private boolean isInfoHideInTitle(){
 		if(title.contains("成功收款")&&content.contains("立即查看"))
 			return true;
 		return false;
-			
 	}
         private String whoTransferred(String content){
                 Pattern pattern = Pattern.compile("(.*)(已成功向你转了)");

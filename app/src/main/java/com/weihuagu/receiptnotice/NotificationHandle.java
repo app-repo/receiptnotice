@@ -60,13 +60,11 @@ public abstract class NotificationHandle {
         }
 
         protected void printNotify(){
-                LogUtil.debugLog("-----------------");
+                LogUtil.debugLog("-----------------\\");
                 LogUtil.debugLog("接受到app消息");
                 LogUtil.debugLog("包名是"+this.pkgtype);
                 NotificationUtil.printNotify(notification);
-                LogUtil.debugLog("**********************");
-
-
+                LogUtil.debugLog("-----------------/");
         }
 
         protected void openNotify(){
