@@ -55,7 +55,7 @@ public class HelloFragment extends Fragment {
         setTextWithServicestatus();
     }
     private void setTextWithNumofpush(){
-        numofpush.setText("推送次数"+preference.getNumOfPush());
+        numofpush.setText("推送次数："+preference.getNumOfPush());
     }
     private void setTextWithPosturl(){
         if(preference.getPostUrl()!=null)
@@ -65,7 +65,7 @@ public class HelloFragment extends Fragment {
     private void setTextWithServicestatus(){
         Context context = getContext();
         if (context == null) {
-            servicestatus.setText("null");
+            servicestatus.setText("服务状态：null");
             return;
         }
         String serviceName = NLService.class.getName();
@@ -82,9 +82,9 @@ public class HelloFragment extends Fragment {
             }
         }
         if(collectorRunning) {
-            servicestatus.setText("运行中");
+            servicestatus.setText("服务状态：运行中");
         }else{
-            servicestatus.setText("停止");
+            servicestatus.setText("服务状态：未运行(请尝试重启手机)");
         }
     }
     private void resetText(){
