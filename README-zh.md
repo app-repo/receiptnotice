@@ -1,6 +1,7 @@
 ### 异常情况
 
 1. 监听不到状态条通知
+
     开启手机的 USB 调试模式，手机用数据线连接到电脑，在电脑的命令行执行 `adb shell dumpsys notification` 命令后，从后往前找到 `Notification listeners:` 查看其下的
     `All notification listeners (3) enabled for current profiles:` (enabled) 和 `Live notification listeners (5):` (live)，确认是否包含
     `com.weihuagu.receiptnotice/com.weihuagu.receiptnotice.NLService`，如果仅仅在 enabled 中，而不在 live 中，可以尝试重启手机后再次验证。
