@@ -18,6 +18,10 @@ public class HandlePost implements IDoPost, AsyncResponse {
         getPostUrl();
     }
 
+    public HandlePost(String url) {
+        posturl = url;
+    }
+
     protected String getPostUrl() {
         PreferenceUtil preference = new PreferenceUtil(MainApplication.getAppContext());
         posturl = preference.getPostUrl();

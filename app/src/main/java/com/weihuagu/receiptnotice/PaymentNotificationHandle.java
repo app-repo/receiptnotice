@@ -31,17 +31,18 @@ public abstract class PaymentNotificationHandle extends NotificationHandle {
         this.actionstatusbar = actionstatusbar;
     }
 
-    protected String extractMoney(String content) {
-        Pattern pattern = Pattern.compile("(收款|收款￥|向你付款|向您付款|入账|到帐)\\s*(([1-9]{1}\\d*)|([0]{1}))(\\.(\\d){0,2})?\\s*元");
+    public static String parseMoney(String content) {
+        Pattern pattern = Pattern.compile("(收款|收款￥|向你付款|向您付款|入账|到账)\\s*([1-9]\\d*|0)(\\.\\d{0,2})?\\s*元");
         Matcher matcher = pattern.matcher(content);
         List<String> list = new ArrayList<>();
         while (matcher.find()) {
             list.add(matcher.group());
+            //System.out.println(matcher.group());
         }
         if (list.size() > 0) {
             String tmp = list.get(list.size() - 1);
             System.out.println(tmp);
-            Pattern patternnum = Pattern.compile("(([1-9]{1}\\d*)|([0]{1}))(\\.(\\d){0,2})?");
+            Pattern patternnum = Pattern.compile("([1-9]\\d*|[0])(\\.\\d{0,2})?");
             Matcher matchernum = patternnum.matcher(tmp);
             if (matchernum.find())
                 return matchernum.group();
@@ -49,11 +50,14 @@ public abstract class PaymentNotificationHandle extends NotificationHandle {
         } else
             return null;
 
+    }
 
+    protected String extractMoney(String content) {
+        return parseMoney(content);
     }
 
     protected boolean predictIsPost(String content) {
-        Pattern pattern = Pattern.compile("(收到|收款|向你付款|向您付款|入账)(([1-9]{1}\\d*)|([0]{1}))(\\.(\\d){0,2})?元");
+        Pattern pattern = Pattern.compile("(收到|收款|向你付款|向您付款|入账|到帐)\\s*(([1-9]{1}\\d*)|([0]{1}))(\\.(\\d){0,2})?\\s*元");
         Matcher matcher = pattern.matcher(content);
             return matcher.find();
 
@@ -67,13 +71,11 @@ public abstract class PaymentNotificationHandle extends NotificationHandle {
     }
 
     protected void printNotify() {
-        LogUtil.debugLog("-----------------");
+        LogUtil.debugLog("-----------------\\");
         LogUtil.debugLog("接受到支付类app消息");
         LogUtil.debugLog("包名是" + this.pkgtype);
         NotificationUtil.printNotify(this.notification);
-        LogUtil.debugLog("**********************");
+        LogUtil.debugLog("-----------------/");
     }
-
-
 }
 
