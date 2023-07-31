@@ -5,10 +5,10 @@ import com.weihuagu.receiptnotice.util.DataBaseHolder;
 
 import java.util.Map;
 
-public class OnlyWriteToDateBase {
+public class OnlyWriteToDatabase {
     DataBaseHolder database = DataBaseHolder.getInstance();
 
-    public void onePostWriteToDateBase(String postjson) {
+    public void onePostWriteToDatabase(String postjson) {
         Gson gson = new Gson();
         Map<String, String> postmap = gson.fromJson(postjson, Map.class);
         String type = postmap.get("type");
