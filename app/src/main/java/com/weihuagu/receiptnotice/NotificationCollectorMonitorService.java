@@ -137,16 +137,6 @@ public class NotificationCollectorMonitorService extends Service {
             @Override
             public void call(Object... args) {
                 LogUtil.infoLog("Socket.DISCONNECT: " + objs2str(args));
-                //*
-                LogUtil.infoLog("socket disconnected,try start echo in 5 seconds");
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                mSocket.close();
-                echoServer();
-                // */
             }
         });
         mSocket.on(Socket.EVENT_PING, new Emitter.Listener() {
@@ -236,6 +226,7 @@ public class NotificationCollectorMonitorService extends Service {
             echotimertask.cancel();
             echotimertask = null;
         }
+        EchoSocket.clearInstance();
         LogUtil.debugLog("restart echo timer task");
         startEchoTimer();
     }

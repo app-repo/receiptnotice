@@ -112,7 +112,7 @@ public class PreferenceUtil {
     }
 
     public String getEncryptMethod() {
-        return this.sharedPref.getString("encryptmethod", null);
+        return this.sharedPref.getString("encryptmethod", "md5");
     }
 
     public String getPasswd() {
