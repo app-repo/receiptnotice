@@ -45,7 +45,7 @@ public class BankDistinguisher {
     }
 
     public String extractMoney(String content) {
-        Pattern pattern = Pattern.compile("(收入|存入|转入|入账)(\\(.*\\))?(\\d{1,3}(,\\d{2,3})*(\\.\\d{0,2})?)元?");
+        Pattern pattern = Pattern.compile("(收入|存入|转入|入账|到账)(\\(.*\\))?(\\d{1,3}(,\\d{2,3})*(\\.\\d{0,2})?)元?");
         Matcher matcher = pattern.matcher(content);
         if (matcher.find()) {
             String tmp = matcher.group();
