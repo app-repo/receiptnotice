@@ -56,7 +56,7 @@ public abstract class PaymentNotificationHandle extends NotificationHandle {
     }
 
     public static Matcher matchPostContent(String content) {
-        Pattern pattern = Pattern.compile("(收到|收款|向你付款|向您付款|入账|到账)\\s*(￥\\s*)?([1-9]\\d*|0)(\\.\\d{0,2})?\\s*元?");
+        Pattern pattern = Pattern.compile("(收到|收款|向你付款|向您付款|入账|到账)\\s*([￥¥]\\s*)?([1-9]\\d*|0)(\\.\\d{0,2})?\\s*元?");
         Matcher matcher = pattern.matcher(content);
         return matcher;
     }

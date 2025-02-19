@@ -6,6 +6,7 @@ import com.weihuagu.receiptnotice.action.AsyncResponse;
 import com.weihuagu.receiptnotice.action.HandlePost;
 import com.weihuagu.receiptnotice.action.IDoPost;
 import com.weihuagu.receiptnotice.pushclassification.payment.AlipayPaymentNotificationHandle;
+import com.weihuagu.receiptnotice.pushclassification.payment.WechatPaymentNotificationHandle;
 import com.weihuagu.receiptnotice.pushclassification.payment.BankDistinguisher;
 import com.weihuagu.receiptnotice.util.PreferenceUtil;
 
@@ -74,6 +75,8 @@ public class TestBankDistinguisher extends TestCase {
         System.out.println(PaymentNotificationHandle.parseMoney(test1));
         String test5 = "上一笔播报：支付宝到账 0.01 元。";
         System.out.println(PaymentNotificationHandle.parseMoney(test5));
+        String test6 = "个人收款码到账¥0.01";
+        System.out.println(PaymentNotificationHandle.parseMoney(test6));
     }
 
     @Test
