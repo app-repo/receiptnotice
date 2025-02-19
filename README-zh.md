@@ -6,6 +6,9 @@
     `All notification listeners (3) enabled for current profiles:` (enabled) 和 `Live notification listeners (5):` (live)，确认是否包含
     `com.weihuagu.receiptnotice/com.weihuagu.receiptnotice.NLService`，如果仅仅在 enabled 中，而不在 live 中，可以尝试重启手机后再次验证。
 
+### 构建方式
+
+使用 Android Studio 工具，点击顶部菜单 "Build" / "Generate Signed Bundle / APK..." 配置好表单后提交
 
 ### 提示
 - `很感谢你的使用`
